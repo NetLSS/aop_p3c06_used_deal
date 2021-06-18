@@ -1,5 +1,6 @@
 package com.lilcode.aop.p3.c06.used_deal.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -57,10 +58,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val fragmentHomeBinding = FragmentHomeBinding.bind(view)
         binding = fragmentHomeBinding
 
+        articleList.clear()
         articleDB = Firebase.database.reference.child(DB_ARTICLES)
-
         articleAdapter = ArticleAdapter()
-        //setArticleSample()
 
         // activity 일 때는 그냥 this 로 넘겼지만 (그자체가 컨텍스트라서) 그러나
         // 프레그 먼트의 경우에는 아래처럼. context
@@ -78,6 +78,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         articleDB.removeEventListener(listener)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
 
