@@ -78,6 +78,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         articleDB.removeEventListener(listener)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        articleAdapter.notifyDataSetChanged() // view 를 다시 그림;
+    }
+
     private fun setArticleSample() {
         articleAdapter.submitList(mutableListOf<ArticleModel>().apply {
             add(ArticleModel("0", "AAA", 1000000, "5000원", ""))
