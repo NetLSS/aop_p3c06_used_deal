@@ -1,6 +1,7 @@
 package com.lilcode.aop.p3.c06.used_deal.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -66,7 +67,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // 프레그 먼트의 경우에는 아래처럼. context
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
+        fragmentHomeBinding.addFloatingButton.setOnClickListener {
+            context?.let {
+                val intent = Intent(it, AddArticleActivity::class.java )
+                startActivity(intent)
+            }
 
+        }
 
         // 데이터 가져오기;
         articleDB.addChildEventListener(listener)
