@@ -32,7 +32,7 @@ class AddArticleActivity : AppCompatActivity() {
         Firebase.storage
     }
 
-    private val articleDB : DatabaseReference by lazy {
+    private val articleDB: DatabaseReference by lazy {
         Firebase.database.reference.child(DB_ARTICLES)
     }
 
@@ -41,18 +41,21 @@ class AddArticleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_article)
 
+        // 이미지 추가 버튼;
         findViewById<Button>(R.id.imageAddButton).setOnClickListener {
             when {
                 ContextCompat.checkSelfPermission(
                     this,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED -> {
+                ) == PackageManager.PERMISSION_GRANTED -> { // 권한을 가지고 있는 경우;
                     startContentProvider()
                 }
                 shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                    // 교육이 필요한 경우;
                     showPermissionContextPop()
                 }
                 else -> {
+                    // 권한 요청;
                     requestPermissions(
                         arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
                         1010
@@ -62,20 +65,24 @@ class AddArticleActivity : AppCompatActivity() {
 
         }
 
+        // 게시글 등록하기 버튼;
         findViewById<Button>(R.id.submitButton).setOnClickListener {
+            // 입력된 값 가져오기;
             val title = findViewById<EditText>(R.id.titleEditText).text.toString()
             val price = findViewById<EditText>(R.id.priceEditText).text.toString()
             val sellerId = auth.currentUser?.uid.orEmpty()
 
+            // 모델 생성;
             val model = ArticleModel(sellerId, title, System.currentTimeMillis(), "${price}원", "")
 
+            // 데이터베이스에 업로드;
             articleDB.push().setValue(model)
+
             finish()
         }
     }
 
-
-
+    // 권힌 요청 결과 확인;
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -83,12 +90,13 @@ class AddArticleActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when(requestCode){
-            1010->{
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        when (requestCode) {
+            1010 -> {
+                // 권한을 허용한 경우;
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startContentProvider()
-                }else{
-                    Toast.makeText(this,"권한을 거부하셨습니다.", Toast.LENGTH_SHORT)
+                } else { // 권한을 거부한 경우;
+                    Toast.makeText(this, "권한을 거부하셨습니다.", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -96,7 +104,8 @@ class AddArticleActivity : AppCompatActivity() {
     }
 
     private fun startContentProvider() {
-        val itent = Intent(Intent.ACTION_GET_CONTENT)
+        // 이미지 SAF 기능 실행; 이미지 가져오기;
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(intent, 2020)
     }
@@ -105,37 +114,39 @@ class AddArticleActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
 
         }
 
-        when(requestCode){
+        when (requestCode) {
             2020 -> {
                 val uri = data?.data
-                if (uri != null){
+                if (uri != null) {
+                    // 사진을 정상적으로 가져온 경우;
                     findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
                     selectedUri = uri
-                }else{
-                    Toast.makeText(this," 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
+                } else {
+                    Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
-            else ->{
-                Toast.makeText(this," 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
+            else -> {
+                Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
                     .show()
             }
         }
     }
 
+    // 교육용 팝업 띄우기;
     private fun showPermissionContextPop() {
-       AlertDialog.Builder(this)
-           .setTitle("권한이 필요합니다.")
-           .setMessage("사진을 가져오기 위해 필요합니다.")
-           .setPositiveButton("동의") { _, _ ->
-               requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1010)
-           }
-           .create()
-           .show()
+        AlertDialog.Builder(this)
+            .setTitle("권한이 필요합니다.")
+            .setMessage("사진을 가져오기 위해 필요합니다.")
+            .setPositiveButton("동의") { _, _ ->
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1010)
+            }
+            .create()
+            .show()
     }
 
 }

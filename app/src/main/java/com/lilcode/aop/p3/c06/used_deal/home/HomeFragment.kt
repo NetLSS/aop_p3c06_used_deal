@@ -32,17 +32,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val articleModel = snapshot.getValue(ArticleModel::class.java)
             articleModel ?: return
 
-            articleList.add(articleModel)
-            articleAdapter.submitList(articleList)
+            articleList.add(articleModel) // 리스트에 새로운 항목을 더해서;
+            articleAdapter.submitList(articleList) // 어뎁터 리스트에 등록;
         }
 
-        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {        }
+        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
 
-        override fun onChildRemoved(snapshot: DataSnapshot) {        }
+        override fun onChildRemoved(snapshot: DataSnapshot) {}
 
-        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {        }
+        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-        override fun onCancelled(error: DatabaseError) {        }
+        override fun onCancelled(error: DatabaseError) {}
 
     }
 
@@ -60,23 +60,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val fragmentHomeBinding = FragmentHomeBinding.bind(view)
         binding = fragmentHomeBinding
 
-        articleList.clear()
-        articleDB = Firebase.database.reference.child(DB_ARTICLES)
+        articleList.clear() //리스트 초기화;
+        articleDB = Firebase.database.reference.child(DB_ARTICLES) // 디비 가져오기;
         articleAdapter = ArticleAdapter()
 
         // activity 일 때는 그냥 this 로 넘겼지만 (그자체가 컨텍스트라서) 그러나
         // 프레그 먼트의 경우에는 아래처럼. context
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
+
+        // 플로팅 버튼;
         fragmentHomeBinding.addFloatingButton.setOnClickListener {
             context?.let {
-                // todo : 로그인  구현 후 주석 지우기.
+                // todo : 로그인  구현 후 주석지우기.
                 //if(auth.currentUser != null) {
-                    val intent = Intent(it, AddArticleActivity::class.java)
-                    startActivity(intent)
+                val intent = Intent(it, AddArticleActivity::class.java)
+                startActivity(intent)
                 //}
                 //else{
-                    Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+                //    Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
                 //}
             }
         }

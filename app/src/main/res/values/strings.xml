@@ -3,4 +3,8 @@
     <string name="home">홈</string>
     <string name="chatting">채팅</string>
     <string name="my_info">나의 정보</string>
+    <string name="title_hint">글 제목</string>
+    <string name="price_hint">가격</string>
+    <string name="submit_image">이미지 등록하기</string>
+    <string name="submit">등록하기</string>
 </resources>

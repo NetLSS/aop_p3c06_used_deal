@@ -19,8 +19,9 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigationView)
 
-        replaceFragment(homeFragment) // 최초 홈.
+        replaceFragment(homeFragment) // 최초 홈 설정.
 
+        // 네비게이션 버튼 리스너;
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
