@@ -1,6 +1,7 @@
 package com.lilcode.aop.p3.c06.used_deal.chatList
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.lilcode.aop.p3.c06.used_deal.DBKey.Companion.CHILD_CHAT
 import com.lilcode.aop.p3.c06.used_deal.DBKey.Companion.DB_USERS
 import com.lilcode.aop.p3.c06.used_deal.R
+import com.lilcode.aop.p3.c06.used_deal.chatdetail.ChatRoomActivity
 import com.lilcode.aop.p3.c06.used_deal.databinding.FragmentChatlistBinding
 import com.lilcode.aop.p3.c06.used_deal.home.ArticleAdapter
 
@@ -36,8 +38,12 @@ class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
 
         binding = fragmentChatlistBinding
 
-        chatListAdapter = ChatListAdapter(onItemClicked = {
-            // TODO 채팅 방으로 이동하는 코드;
+        chatListAdapter = ChatListAdapter(onItemClicked = { chatRoom ->
+            context?.let {
+                val intent = Intent(it, ChatRoomActivity::class.java)
+                intent.putExtra("chatKey", chatRoom.key)
+                startActivity(intent)
+            }
 
         })
 
