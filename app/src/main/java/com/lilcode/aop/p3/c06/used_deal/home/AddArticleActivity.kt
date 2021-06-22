@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -72,14 +73,53 @@ class AddArticleActivity : AppCompatActivity() {
             val price = findViewById<EditText>(R.id.priceEditText).text.toString()
             val sellerId = auth.currentUser?.uid.orEmpty()
 
+            // 중간에 이미지가 있으면 업로드 과정을 추가
+            if (selectedUri != null){
+                val photoUri = selectedUri ?: return@setOnClickListener
+                uploadPhoto(photoUri,
+                successHandler = { url ->
+                    uploadArticle(sellerId,title,price,url)
+                },
+                errorHandler = {
+                    Toast.makeText(this, "사진 업로드 실패.", Toast.LENGTH_SHORT)
+                        .show()
+                })
+            } else{
+                uploadArticle(sellerId,title,price,"")
+            }
+
             // 모델 생성;
-            val model = ArticleModel(sellerId, title, System.currentTimeMillis(), "${price}원", "")
 
-            // 데이터베이스에 업로드;
-            articleDB.push().setValue(model)
-
-            finish()
         }
+    }
+
+    private fun uploadPhoto(uri: Uri, successHandler: (String) -> Unit, errorHandler: () -> Unit){
+        var fileName = "${System.currentTimeMillis()}.png"
+        storage.reference.child("article/photo").child(fileName)
+            .putFile(uri)
+            .addOnCompleteListener {
+                if(it.isSuccessful){ // 업로드 과정 완료
+                    // 다운로드 url 가져오기
+                    storage.reference.child("article/photo").child(fileName).downloadUrl
+                        .addOnSuccessListener { uri->
+                            successHandler(uri.toString())
+                        } .addOnFailureListener {
+                            errorHandler()
+                        }
+                } else{
+                    Log.d("sslee",it.exception.toString())
+                    errorHandler()
+                }
+            }
+    }
+
+    private fun uploadArticle(sellerId: String, title: String, price:String, imageUrl: String){
+        val model = ArticleModel(sellerId, title, System.currentTimeMillis(), "${price}원", imageUrl)
+
+        // 데이터베이스에 업로드;
+        articleDB.push().setValue(model)
+
+        finish()
     }
 
     // 권힌 요청 결과 확인;
