@@ -7,12 +7,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -68,6 +66,7 @@ class AddArticleActivity : AppCompatActivity() {
 
         // 게시글 등록하기 버튼;
         findViewById<Button>(R.id.submitButton).setOnClickListener {
+            showProgress()
             // 입력된 값 가져오기;
             val title = findViewById<EditText>(R.id.titleEditText).text.toString()
             val price = findViewById<EditText>(R.id.priceEditText).text.toString()
@@ -77,15 +76,17 @@ class AddArticleActivity : AppCompatActivity() {
             if (selectedUri != null){
                 val photoUri = selectedUri ?: return@setOnClickListener
                 uploadPhoto(photoUri,
-                successHandler = { url ->
+                successHandler = { url -> // 다운로드 url 을 받아서 처리;
                     uploadArticle(sellerId,title,price,url)
                 },
                 errorHandler = {
                     Toast.makeText(this, "사진 업로드 실패.", Toast.LENGTH_SHORT)
                         .show()
+                    hideProgress()
                 })
             } else{
                 uploadArticle(sellerId,title,price,"")
+                hideProgress()
             }
 
             // 모델 생성;
@@ -119,6 +120,7 @@ class AddArticleActivity : AppCompatActivity() {
         // 데이터베이스에 업로드;
         articleDB.push().setValue(model)
 
+        hideProgress()
         finish()
     }
 
@@ -148,6 +150,15 @@ class AddArticleActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(intent, 2020)
+    }
+
+    private fun showProgress(){
+        findViewById<ProgressBar>(R.id.progressBar).isVisible = true
+
+    }
+
+    private fun hideProgress(){
+        findViewById<ProgressBar>(R.id.progressBar).isVisible = false
     }
 
 
