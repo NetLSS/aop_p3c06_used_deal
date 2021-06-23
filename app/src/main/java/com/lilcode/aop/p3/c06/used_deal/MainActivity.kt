@@ -9,6 +9,7 @@ import com.lilcode.aop.p3.c06.used_deal.home.HomeFragment
 import com.lilcode.aop.p3.c06.used_deal.myPage.MyPageFragment
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // fragmet 화면 전환
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction() // 트랜젝션 : 작업을 시작한다고 알려줌;
             .apply {

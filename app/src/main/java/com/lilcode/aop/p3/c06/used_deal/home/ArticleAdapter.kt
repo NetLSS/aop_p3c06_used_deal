@@ -21,7 +21,7 @@ class ArticleAdapter(val onItemClicked: (ArticleModel) -> Unit) : ListAdapter<Ar
 
             // Long 형식에서 날짜로 바꾸기.
             val format = SimpleDateFormat("MM월 dd일")
-            val date = Date(articleModel.createdAt)
+            val date = Date(articleModel.createdAt) // Long -> Date
 
             binding.titleTextView.text = articleModel.title
             binding.dateTextView.text = format.format(date).toString()

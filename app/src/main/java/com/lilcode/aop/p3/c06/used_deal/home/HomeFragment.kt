@@ -65,11 +65,48 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = fragmentHomeBinding
 
         articleList.clear() //리스트 초기화;
-        articleDB = Firebase.database.reference.child(DB_ARTICLES) // 디비 가져기;
-        userDB = Firebase.database.reference.child(DB_USERS)
+
+        initDB()
+
+        initArticleAdapter(view)
+
+        initArticleRecyclerView()
+
+        initFloatingButton(view)
+
+
+
+        // 데이터 가져오기;
+        articleDB.addChildEventListener(listener)
+    }
+
+    private fun initFloatingButton(view: View) {
+        // 플로팅 버튼;
+        binding!!.addFloatingButton.setOnClickListener {
+            context?.let {
+                if (auth.currentUser != null) {
+                    val intent = Intent(it, AddArticleActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun initArticleRecyclerView() {
+        // activity 일 때는 그냥 this 로 넘겼지만 (그자체가 컨텍스트라서) 그러나
+        // 프레그 먼트의 경우에는 아래처럼. context
+        binding?:return
+
+        binding!!.articleRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding!!.articleRecyclerView.adapter = articleAdapter
+    }
+
+    private fun initArticleAdapter(view: View) {
         articleAdapter = ArticleAdapter(onItemClicked = { articleModel ->
             if(auth.currentUser != null){
-                // 로그인 한 상태;
+                // 로그인 상태;
                 if(auth.currentUser?.uid != articleModel.sellerId){
                     // 채팅방 생성
                     val chatRoom = ChatListItem(
@@ -96,32 +133,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     Snackbar.make(view, "내가 올린 아이템입니다.", Snackbar.LENGTH_LONG).show()
                 }
             }else{
-                // 로그인 안한 상태;
+                // 로그아웃 상태;
                 Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
             }
 
 
         })
+    }
 
-        // activity 일 때는 그냥 this 로 넘겼지만 (그자체가 컨텍스트라서) 그러나
-        // 프레그 먼트의 경우에는 아래처럼. context
-        fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
-        fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
-
-        // 플로팅 버튼;
-        fragmentHomeBinding.addFloatingButton.setOnClickListener {
-            context?.let {
-                if (auth.currentUser != null) {
-                    val intent = Intent(it, AddArticleActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
-                }
-            }
-        }
-
-        // 데이터 가져오기;
-        articleDB.addChildEventListener(listener)
+    private fun initDB() {
+        articleDB = Firebase.database.reference.child(DB_ARTICLES) // 디비 가져오기;
+        userDB = Firebase.database.reference.child(DB_USERS)
     }
 
     override fun onDestroy() {

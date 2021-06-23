@@ -15,6 +15,7 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
 
 
     private lateinit var binding: FragmentMypageBinding
+
     private val auth: FirebaseAuth by lazy {
         Firebase.auth
     }
@@ -24,6 +25,57 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
 
         val fragmentMypageBinding = FragmentMypageBinding.bind(view)
         binding = fragmentMypageBinding
+
+        initSignInOutButton()
+
+        initSignUpButton()
+
+        initEmailEditText()
+
+        initPasswordEditText()
+    }
+
+    private fun initPasswordEditText() {
+        // 이메일 및 패스워드가 비어있지 않을 때만 로그인 관련 버튼 활성화
+        binding.passwordEditText.addTextChangedListener {
+            val enable =
+                binding.emailEditText.text.isNotEmpty() && binding.passwordEditText.text.isNotEmpty()
+            binding.signUpButton.isEnabled = enable
+            binding.signInOutButton.isEnabled = enable
+        }
+    }
+
+    private fun initEmailEditText() {
+        // 이메일 및 패스워드가 비어있지 않을 때만 로그인 관련 버튼 활성화
+        binding.emailEditText.addTextChangedListener {
+            val enable =
+                binding.emailEditText.text.isNotEmpty() && binding.passwordEditText.text.isNotEmpty()
+            binding.signUpButton.isEnabled = enable
+            binding.signInOutButton.isEnabled = enable
+        }
+    }
+
+    private fun initSignUpButton() {
+        binding.signUpButton.setOnClickListener {
+
+            val email = binding.emailEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(requireActivity()){ task->
+                    if(task.isSuccessful){
+                        Toast.makeText(context, "회원가입에 성공했습니다. 로그인 버튼을 눌러주세요.", Toast.LENGTH_SHORT)
+                            .show()
+                    }else{
+                        Toast.makeText(context, "회원가입에 실패했습니다. 이미 가입된 이메일일 수 있습니다.", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                }
+        }
+    }
+
+    private fun initSignInOutButton() {
 
         binding.signInOutButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
@@ -53,38 +105,6 @@ class MyPageFragment : Fragment(R.layout.fragment_mypage) {
                 binding.signUpButton.isEnabled = false
             }
         }
-
-        binding.signUpButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity()){ task->
-                    if(task.isSuccessful){
-                        Toast.makeText(context, "회원가입에 성공했습니다. 로그인 버튼을 눌러주세요.", Toast.LENGTH_SHORT)
-                            .show()
-                    }else{
-                        Toast.makeText(context, "회원가입에 실패했습니다. 이미 가입된 이메일일 수 있습니다.", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                }
-        }
-
-        binding.emailEditText.addTextChangedListener {
-            val enable =
-                binding.emailEditText.text.isNotEmpty() && binding.passwordEditText.text.isNotEmpty()
-            binding.signUpButton.isEnabled = enable
-            binding.signInOutButton.isEnabled = enable
-        }
-
-        binding.passwordEditText.addTextChangedListener {
-            val enable =
-                binding.emailEditText.text.isNotEmpty() && binding.passwordEditText.text.isNotEmpty()
-            binding.signUpButton.isEnabled = enable
-            binding.signInOutButton.isEnabled = enable
-        }
-
     }
 
     override fun onStart() {
