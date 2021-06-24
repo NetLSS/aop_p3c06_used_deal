@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -36,6 +37,17 @@ class AddArticleActivity : AppCompatActivity() {
         Firebase.database.reference.child(DB_ARTICLES)
     }
 
+    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){ uri->
+
+        if (uri != null) {
+            // 사진을 정상적으로 가져온 경우;
+            findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
+            selectedUri = uri
+        } else {
+            Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +55,6 @@ class AddArticleActivity : AppCompatActivity() {
 
         // 이미지 추가 버튼;
         initImageAddButton()
-
 
         // 게시글 등록하기 버튼;
         initSubmitButton()
@@ -159,9 +170,14 @@ class AddArticleActivity : AppCompatActivity() {
 
     private fun startContentProvider() {
         // 이미지 SAF 기능 실행; 이미지 가져오기;
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        startActivityForResult(intent, 2020)
+
+        // old ver.
+        //val intent = Intent(Intent.ACTION_GET_CONTENT)
+        //intent.type = "image/*"
+        // startActivityForResult(intent, 2020) // deprecated
+
+        // new ver.
+        getContent.launch("image/*")
     }
 
     private fun showProgress() {
@@ -174,31 +190,31 @@ class AddArticleActivity : AppCompatActivity() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-
-        }
-
-        when (requestCode) {
-            2020 -> {
-                val uri = data?.data
-                if (uri != null) {
-                    // 사진을 정상적으로 가져온 경우;
-                    findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
-                    selectedUri = uri
-                } else {
-                    Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-            else -> {
-                Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (resultCode != Activity.RESULT_OK) {
+//
+//        }
+//
+//        when (requestCode) {
+//            2020 -> {
+//                val uri = data?.data
+//                if (uri != null) {
+//                    // 사진을 정상적으로 가져온 경우;
+//                    findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
+//                    selectedUri = uri
+//                } else {
+//                    Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            }
+//            else -> {
+//                Toast.makeText(this, " 사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
+//    }
 
     // 교육용 팝업 띄우기;
     private fun showPermissionContextPop() {
