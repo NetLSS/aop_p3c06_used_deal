@@ -23,6 +23,7 @@ import com.lilcode.aop.p3.c06.used_deal.databinding.FragmentChatlistBinding
 import com.lilcode.aop.p3.c06.used_deal.home.ArticleAdapter
 
 class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
+
     private lateinit var binding: FragmentChatlistBinding
     private lateinit var chatListAdapter: ChatListAdapter
     private val chatRoomList = mutableListOf<ChatListItem>()
@@ -38,28 +39,42 @@ class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
 
         binding = fragmentChatlistBinding
 
+        initchartListAdapter()
+
+        chatRoomList.clear()
+
+        initChartRecyclerView()
+
+        initChatDB()
+    }
+
+    private fun initchartListAdapter() {
         chatListAdapter = ChatListAdapter(onItemClicked = { chatRoom ->
             context?.let {
                 val intent = Intent(it, ChatRoomActivity::class.java)
-                intent.putExtra("chatKey", chatRoom.key)
+                intent.putExtra("chatKey", chatRoom.key) // 인텐트로 키를 전달해서 start
                 startActivity(intent)
             }
 
         })
+    }
 
-        chatRoomList.clear()
-
+    private fun initChartRecyclerView() {
         binding.chatListRecyclerView.adapter = chatListAdapter
-        binding.chatListRecyclerView.layoutManager=LinearLayoutManager(context)
+        binding.chatListRecyclerView.layoutManager = LinearLayoutManager(context)
+    }
 
+    private fun initChatDB() {
         val firebaseUser = auth.currentUser ?: return
 
-        val chatDB = Firebase.database.reference.child(DB_USERS).child(firebaseUser.uid).child(CHILD_CHAT)
+        val chatDB =
+            Firebase.database.reference.child(DB_USERS).child(firebaseUser.uid).child(CHILD_CHAT)
 
-        chatDB.addListenerForSingleValueEvent(object : ValueEventListener{
+        // db에 있는 채팅 리스트를 불러와 각각 리스트에 더해준다.
+        chatDB.addListenerForSingleValueEvent(object : ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach{
+                snapshot.children.forEach {
                     val model = it.getValue(ChatListItem::class.java)
                     model ?: return
                     chatRoomList.add(model)
@@ -68,9 +83,7 @@ class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
                 chatListAdapter.notifyDataSetChanged()
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+            override fun onCancelled(error: DatabaseError) {}
 
         })
     }
@@ -82,6 +95,5 @@ class ChatListFragment : Fragment(R.layout.fragment_chatlist) {
 
         chatListAdapter.notifyDataSetChanged()
     }
-
 
 }

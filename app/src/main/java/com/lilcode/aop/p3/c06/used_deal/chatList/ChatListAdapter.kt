@@ -13,14 +13,13 @@ import com.lilcode.aop.p3.c06.used_deal.home.ArticleModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatListAdapter(val onItemClicked: (ChatListItem) -> Unit) : ListAdapter<ChatListItem, ChatListAdapter.ViewHolder>(diffUtil) {
+class ChatListAdapter(val onItemClicked: (ChatListItem) -> Unit) :
+    ListAdapter<ChatListItem, ChatListAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val binding: ItemChatlistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SimpleDateFormat")
         fun bind(chatListItem: ChatListItem) {
-
-
 
             binding.root.setOnClickListener {
                 onItemClicked(chatListItem)
