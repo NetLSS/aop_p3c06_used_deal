@@ -75,7 +75,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initFloatingButton(view)
 
         // 데이터 가져오기;
+        initListener()
         articleDB.addChildEventListener(listener)
+    }
+
+    private fun initListener() {
+        TODO("Not yet implemented")
     }
 
     private fun initFloatingButton(view: View) {

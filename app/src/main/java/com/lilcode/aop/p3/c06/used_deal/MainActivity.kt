@@ -25,17 +25,9 @@ class MainActivity : AppCompatActivity() {
         // 네비게이션 버튼 리스너;
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> {
-                    replaceFragment(homeFragment)
-                }
-
-                R.id.chatList -> {
-                    replaceFragment(chatListFragment)
-                }
-
-                R.id.myPage -> {
-                    replaceFragment(myPageFragment)
-                }
+                R.id.home -> replaceFragment(homeFragment)
+                R.id.chatList -> replaceFragment(chatListFragment)
+                R.id.myPage -> replaceFragment(myPageFragment)
             }
             true
         }
