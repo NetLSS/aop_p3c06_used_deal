@@ -16,6 +16,7 @@ class ArticleAdapter(val onItemClicked: (ArticleModel) -> Unit) : ListAdapter<Ar
 
     inner class ViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         @SuppressLint("SimpleDateFormat")
         fun bind(articleModel: ArticleModel) {
 

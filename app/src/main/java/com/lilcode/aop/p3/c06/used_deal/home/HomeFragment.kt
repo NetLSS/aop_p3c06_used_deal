@@ -74,8 +74,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         initFloatingButton(view)
 
-
-
         // 데이터 가져오기;
         articleDB.addChildEventListener(listener)
     }
