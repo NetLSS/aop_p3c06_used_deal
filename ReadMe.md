@@ -18,13 +18,13 @@
 
 # 결과화면
 
-![1](./screenshot/1.png)
+![1](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F2HIIz%2Fbtq72jSJTED%2Fu6GY0M8TgkxtXSkWQCII0K%2Fimg.jpg)
 
+![2](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fc1lhng%2Fbtq74o6QSRo%2FwDcLhK7wwkVuPqf7w20GF0%2Fimg.jpg)
 
+![3](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FD445Y%2Fbtq70C6kLCo%2FvQC2KyptRynJ0ulXkJGD8K%2Fimg.jpg)
 
-![2](./screenshot/2.png)
-
-![3](./screenshot/3.png)
+![4](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbr9nAZ%2Fbtq74DpaYYt%2F8dQBnXSeelEF4tP8kZdRN1%2Fimg.jpg)
 
 
 
